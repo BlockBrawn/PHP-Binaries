@@ -26,6 +26,7 @@ $PHP_XXHASH_VER="0.2.0"
 $PHP_XDEBUG_VER="3.3.2"
 $PHP_ARRAYDEBUG_VER="0.2.0"
 $PHP_ENCODING_VER="0.3.0"
+$PHP_REDIS_VER="6.0.2"
 
 function pm-echo {
     param ([string] $message)
@@ -423,6 +424,7 @@ function download-php-extensions {
     get-github-extension "xdebug"                $PHP_XDEBUG_VER                "xdebug"   "xdebug"
     get-github-extension "arraydebug"            $PHP_ARRAYDEBUG_VER            "pmmp"     "ext-arraydebug"
     get-github-extension "encoding"              $PHP_ENCODING_VER              "pmmp"     "ext-encoding"
+    get-github-extension "phpredis"              $PHP_REDIS_VER                 "phpredis"     "phpredis"    
 
     write-library "php-ext crypto" $PHP_CRYPTO_VER
     write-download
@@ -497,6 +499,7 @@ sdk-command "configure^`
     --enable-opcache^`
     --enable-opcache-jit=$PHP_JIT_ENABLE_ARG^`
     --enable-phar^`
+     --enable-redis=shared^
     --enable-recursionguard=shared^`
     --enable-sockets^`
     --enable-tokenizer^`
@@ -574,6 +577,7 @@ append-file-utf8 "extension=php_chunkutils2.dll" $php_ini
 append-file-utf8 "extension=php_igbinary.dll" $php_ini
 append-file-utf8 "extension=php_leveldb.dll" $php_ini
 append-file-utf8 "extension=php_crypto.dll" $php_ini
+append-file-utf8 "extension=php_redis.dll" $php_ini
 append-file-utf8 "extension=php_libdeflate.dll" $php_ini
 append-file-utf8 "igbinary.compact_strings=0" $php_ini
 append-file-utf8 "zend_extension=php_opcache.dll" $php_ini
