@@ -1244,7 +1244,7 @@ $HAVE_MYSQLI \
 --enable-opcache-jit=$HAVE_OPCACHE_JIT \
 --enable-igbinary \
 --disable-redis-session \
---enable-redis 
+--enable-redis \
 --with-crypto \
 --enable-recursionguard \
 --enable-xxhash \
