@@ -28,6 +28,7 @@ EXT_CRYPTO_VERSION="abbe7cbf869f96e69f2ce897271a61d32f43c7c0" #release not tagge
 EXT_RECURSIONGUARD_VERSION="0.1.0"
 EXT_LIBDEFLATE_VERSION="0.2.1"
 EXT_MORTON_VERSION="0.1.2"
+EXT_REDIS_VERSION="6.0.2"
 EXT_XXHASH_VERSION="0.2.0"
 EXT_ARRAYDEBUG_VERSION="0.2.0"
 EXT_ENCODING_VERSION="0.3.0"
@@ -1119,6 +1120,8 @@ get_github_extension "arraydebug" "$EXT_ARRAYDEBUG_VERSION" "pmmp" "ext-arraydeb
 
 get_github_extension "encoding" "$EXT_ENCODING_VERSION" "pmmp" "ext-encoding"
 
+get_github_extension "redis" "$EXT_REDIS_VERSION" "phpredis" "phpredis"
+
 write_library "PHP" "$PHP_VERSION"
 
 write_configure
@@ -1240,6 +1243,8 @@ $HAVE_MYSQLI \
 --enable-opcache=$HAVE_OPCACHE \
 --enable-opcache-jit=$HAVE_OPCACHE_JIT \
 --enable-igbinary \
+--disable-redis-session \
+--enable-redis 
 --with-crypto \
 --enable-recursionguard \
 --enable-xxhash \
