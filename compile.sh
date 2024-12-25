@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PHP_VERSIONS=("8.2.25" "8.3.13")
+PHP_VERSIONS=("8.2.27" "8.3.15")
 
 #### NOTE: Tags with "v" prefixes behave weirdly in the GitHub API. They'll be stripped in some places but not others.
 #### Use commit hashes to avoid this.
@@ -130,6 +130,7 @@ fi
 	export CXX="g++"
 	#export AR="gcc-ar"
 	export RANLIB=ranlib
+	export STRIP="strip"
 #fi
 
 COMPILE_FOR_ANDROID=no
@@ -332,7 +333,9 @@ function download_file {
 			echo "Cache hit for URL: $url" >> "$DIR/install.log"
 		else
 			echo "Downloading file to cache: $url" >> "$DIR/install.log"
-			_download_file "$1" > "$DOWNLOAD_CACHE/$cached_filename" 2>> "$DIR/install.log"
+			#download to a tmpfile first, so that we don't leave borked cache entries for later runs
+			_download_file "$1" > "$DOWNLOAD_CACHE/.temp" 2>> "$DIR/install.log"
+			mv "$DOWNLOAD_CACHE/.temp" "$DOWNLOAD_CACHE/$cached_filename" >> "$DIR/install.log" 2>&1
 		fi
 		cat "$DOWNLOAD_CACHE/$cached_filename" 2>> "$DIR/install.log"
 	else
@@ -458,6 +461,7 @@ if [ "$TOOLCHAIN_PREFIX" != "" ]; then
 		export RANLIB="$TOOLCHAIN_PREFIX-ranlib"
 		export CPP="$TOOLCHAIN_PREFIX-cpp"
 		export LD="$TOOLCHAIN_PREFIX-ld"
+		export STRIP="$TOOLCHAIN_PREFIX-strip"
 fi
 
 echo "#include <stdio.h>" > test.c
@@ -1379,7 +1383,7 @@ function separate_symbols {
 	output_dirname="$SYMBOLS_DIR/$(dirname $libname)"
 	mkdir -p "$output_dirname" >> "$DIR/install.log" 2>&1
 	cp "$libname" "$SYMBOLS_DIR/$libname.debug" >> "$DIR/install.log" 2>&1
-	strip -S "$libname" >> "$DIR/install.log" 2>&1 || rm "$SYMBOLS_DIR/$libname.debug" #if this fails, this probably isn't an executable binary
+	"$STRIP" -S "$libname" >> "$DIR/install.log" 2>&1 || rm "$SYMBOLS_DIR/$libname.debug" #if this fails, this probably isn't an executable binary
 }
 
 if [ "$SEPARATE_SYMBOLS" != "no" ]; then
